@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+
+<body class="container">
+
+    <div id="app">
+        <h3>Repositories of: {{ username }}</h3>
+        Number of repositories: {{ repo_array.length }}
+
+        <br><br>
+
+        Array syntax: [<span v-for="repo in repo_array">
+            '{{ repo }}',
+        </span>]
+
+        <br><br>
+
+        <ul>
+            <li v-for="repo in repo_array">
+                {{ repo }}
+            </li>
+        </ul>
+
+    </div>
+
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                username: 'SPLITVice',
+                repo_array: [],
+            },
+            methods: {
+                async load() {
+                    const req = await fetch(`https://api.github.com/users/${this.username}/repos?per_page=100`);
+                    const res = await req.json();
+
+                    res.forEach(e => {
+                        this.repo_array.push(e.name);
+                    });
+                }
+            },
+            created() {
+                this.load();
+            }
+        });
+    </script>
+
+    <style>
+        body {
+            background-color: rgb(31, 24, 27);
+            color: white;
+        }
+    </style>
+</body>
+
+</html>
